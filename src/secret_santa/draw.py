@@ -12,7 +12,7 @@ class SecretSantaParticipant:
     name: str
 
     def __hash__(self) -> int:
-        return hash(self.name) + hash(self.email)
+        return hash(self.name + self.email)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, SecretSantaParticipant):
@@ -23,27 +23,18 @@ class SecretSantaParticipant:
 def match_participants(
     participants: set[SecretSantaParticipant],
 ) -> list[tuple[[SecretSantaParticipant, SecretSantaParticipant]]]:
-    def _match_participants(p: set[SecretSantaParticipant]):
-        if len(p) % 2 != 0:
-            raise ValueError("Number of participants must be even")
-
-        output = []
-        need_gifts = p.copy()
-
-        for giver in p:
-            receiver = random.choice(tuple(need_gifts.difference({giver})))
-            need_gifts.remove(receiver)
-            output.append((giver, receiver))
-
-        return output
-
-    # can't be wrong 99 times in a row!
-    for _ in range(100):
-        try:
-            return _match_participants(participants)
-        except IndexError:
-            continue
-    raise ValueError("Failed to match participants after 100 attempts")
+    output = []
+    randomized_participants = list(participants)
+    random.shuffle(randomized_participants)
+    for giver_idx in range(len(randomized_participants)):
+        receiver_idx = (giver_idx + 1) % len(randomized_participants)
+        output.append(
+            (
+                randomized_participants[giver_idx],
+                randomized_participants[receiver_idx],
+            )
+        )
+    return output
 
 
 def read_participants_from_csv(file_path: str) -> set[SecretSantaParticipant]:

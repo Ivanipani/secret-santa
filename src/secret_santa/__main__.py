@@ -2,11 +2,10 @@ import argparse
 import logging
 import logging.config
 import os
-import smtplib
 import sys
 
 from secret_santa.draw import match_participants, read_participants_from_csv
-from secret_santa.email import email_participants
+from secret_santa.email import email_participants, GmailServer
 
 LOGGER = logging.getLogger(__name__)
 
@@ -61,27 +60,20 @@ def main():
         raise ValueError("EMAIL_ADDRESS and EMAIL_PASSWORD must be set")
 
     participants = read_participants_from_csv(args.participants_file)
+    secret_santa_pairs = match_participants(participants)
     if args.dry_run:
-        print("here")
         LOGGER.info("Dry run enabled, not sending emails")
-        LOGGER.info(participants)
+        LOGGER.info("Secret santa pairs: %s", secret_santa_pairs)
         return
 
-    with smtplib.SMTP("smtp.gmail.com", 587) as server:
-        server.starttls()  # Secure the connection
-        server.login(email, password)
-        secret_santa_pairs = match_participants(participants)
-        email_participants(server, email, secret_santa_pairs)
+    with GmailServer(email, password) as server:
+        email_participants(server, secret_santa_pairs)
 
 
 if __name__ == "__main__":
-    # Call this function at the start of your script to configure logging
-    # setup_logging(logging.INFO)
-    logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
-    logging.debug("Logging is configured and working.")  # Test log message
-    # print("Logging is configured and working.")  # Test log message
+    setup_logging(logging.INFO)
     try:
         main()
-    except Exception as e:
-        LOGGER.error(f"Error: {e}")
+    except Exception:
+        LOGGER.exception("An unexpected error occurred")
         sys.exit(1)

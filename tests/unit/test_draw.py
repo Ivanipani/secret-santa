@@ -1,5 +1,6 @@
 import pytest
-from secret_santa.draw import match_participants, SecretSantaParticipant
+
+from secret_santa.draw import SecretSantaParticipant, match_participants
 
 
 @pytest.mark.parametrize(

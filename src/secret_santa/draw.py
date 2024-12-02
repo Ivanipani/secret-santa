@@ -8,6 +8,8 @@ LOGGER = logging.getLogger(__name__)
 
 @dataclass
 class SecretSantaParticipant:
+    """A participant in the Secret Santa draw."""
+
     email: str
     name: str
 
@@ -23,6 +25,7 @@ class SecretSantaParticipant:
 def match_participants(
     participants: set[SecretSantaParticipant],
 ) -> list[tuple[[SecretSantaParticipant, SecretSantaParticipant]]]:
+    """Match the participants of the Secret Santa draw."""
     output = []
     randomized_participants = list(participants)
     random.shuffle(randomized_participants)
@@ -38,6 +41,7 @@ def match_participants(
 
 
 def read_participants_from_csv(file_path: str) -> set[SecretSantaParticipant]:
+    """Read the participants from a CSV file."""
     participants = set()
     with open(file_path, mode="r", newline="") as csvfile:
         csvreader = csv.reader(csvfile)

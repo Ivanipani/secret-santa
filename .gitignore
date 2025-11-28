@@ -10,3 +10,7 @@ wheels/
 .venv
 participants.csv
 .env
+*.csv
+*.yaml
+.secrets
+.claude

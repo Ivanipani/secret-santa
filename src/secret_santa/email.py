@@ -28,11 +28,10 @@ def email_participants(
     """Send emails to the participants of the Secret Santa draw."""
     for giver, receiver in secret_santa_pairs:
         msg = MIMEMultipart()
-        msg["To"] = receiver.email
-        msg["Subject"] = "Secret Santa Draw"
-        body = "Here are the results of the Secret Santa draw...\n\n"
-        body += f"{giver.name} is buying a gift for {receiver.name}\n"
-        body += "\n\nMerry Christmas!"
+        msg["To"] = giver.email
+        msg["Subject"] = "Secret Santa Perdomo/Silva/Aponte 2025"
+        body = f"Otro año, otro Secret Santa! Este año, te toca darle un regalo a...\n\n {receiver.name}"
+        body += "\n\n¡Feliz Navidad!"
         body += "\n\nhttps://github.com/Ivanipani/secret-santa"
         msg.attach(MIMEText(body, "plain"))
 

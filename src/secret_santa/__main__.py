@@ -4,7 +4,7 @@ import logging.config
 import os
 import sys
 
-from secret_santa.draw import match_participants, read_participants_from_csv
+from secret_santa.draw import match_participants, read_participants_from_yaml
 from secret_santa.email import email_participants, GmailServer
 
 LOGGER = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ def setup_logging(log_level=logging.DEBUG):
 def parse_args():
     parser = argparse.ArgumentParser(description="Run the Secret Santa program")
     parser.add_argument(
-        "participants_file", help="Path to the CSV file containing participants"
+        "participants_file", help="Path to the YAML file containing participants"
     )
     parser.add_argument(
         "--dry-run",
@@ -59,7 +59,7 @@ def main():
     except KeyError:
         raise ValueError("EMAIL_ADDRESS and EMAIL_PASSWORD must be set")
 
-    participants = read_participants_from_csv(args.participants_file)
+    participants = read_participants_from_yaml(args.participants_file)
     secret_santa_pairs = match_participants(participants)
     if args.dry_run:
         LOGGER.info("Dry run enabled, not sending emails")

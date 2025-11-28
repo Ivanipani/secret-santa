@@ -13,3 +13,4 @@ participants.csv
 *.csv
 *.yaml
 .secrets
+.claude
